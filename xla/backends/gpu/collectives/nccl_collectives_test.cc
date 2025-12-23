@@ -34,7 +34,6 @@ limitations under the License.
 #include "xla/stream_executor/stream.h"
 #include "xla/stream_executor/stream_executor.h"
 #include "xla/tsl/concurrency/executor.h"
-#include "xla/tsl/concurrency/future.h"
 #include "xla/tsl/platform/threadpool.h"
 
 namespace xla::gpu {
@@ -100,9 +99,9 @@ TEST(NcclCollectives, CreateSymmetricMemory) {
   tsl::Executor& exec = *pool.AsExecutor();
 
   // Register allocated buffers as symmetric memory.
-  auto fsymm0 = tsl::Future<std::unique_ptr<SymmetricMemory>>::MakeOn(
+  auto fsymm0 = Future<std::unique_ptr<SymmetricMemory>>::MakeOn(
       exec, [&] { return comm0->CreateSymmetricMemory(alloc0->address()); });
-  auto fsymm1 = tsl::Future<std::unique_ptr<SymmetricMemory>>::MakeOn(
+  auto fsymm1 = Future<std::unique_ptr<SymmetricMemory>>::MakeOn(
       exec, [&] { return comm1->CreateSymmetricMemory(alloc1->address()); });
 
   ASSERT_OK_AND_ASSIGN(std::unique_ptr<SymmetricMemory> symm0,
